@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2026-04-12T06:54:09"/>
+  <contentHeader name="Unnamed" modificationDateTime="2026-04-12T06:54:09">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="16" y="16"/>
+      </fbd>
+      <ld>
+        <scaling x="16" y="16"/>
+      </ld>
+      <sfc>
+        <scaling x="16" y="16"/>
+      </sfc>
+    </coordinateInfo>
+  </contentHeader>
+  <types>
+    <dataTypes>
+      <dataType name="HOA_MODE">
+        <baseType>
+          <enum>
+            <values>
+              <value name="HOA_HAND"/>
+              <value name="HOA_AUTO"/>
+              <value name="HOA_OFF"/>
+            </values>
+          </enum>
+        </baseType>
+      </dataType>
+    </dataTypes>
+    <pous>
+      <pou name="Run_Mode" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="HOA_Hand">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="HOA_Auto">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="In_Off">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="In_Hand">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="In_Auto">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="Mode">
+              <type>
+                <derived name="HOA_MODE"/>
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"><![CDATA[In_Off := false;
+In_Hand := false;
+In_Auto := false;
+
+if HOA_Hand and not HOA_Auto then 
+  Mode := HOA_HAND;
+  In_Hand := true;
+elsif HOA_Auto and not HOA_Hand then 
+  Mode := HOA_AUTO;
+  In_Auto := true;
+else
+  Mode := HOA_OFF;
+  In_Off := true;
+end_if;]]></xhtml>
+          </ST>
+        </body>
+      </pou>
+      <pou name="Start_CMD" pouType="functionBlock">
+        <interface>
+          <inputVars>
+            <variable name="HOA_In_Hand">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="HOA_In_Auto">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+          </inputVars>
+          <outputVars>
+            <variable name="Auto">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Hand">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="Run_Mode0">
+              <type>
+                <derived name="Run_Mode"/>
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml"><![CDATA[Auto := false;
+Hand := false;
+
+Run_Mode0 (
+    HOA_Hand := HOA_In_Hand,
+    HOA_Auto := HOA_In_Auto
+);
+
+if Run_Mode0.In_Auto then
+  Auto := true;
+  
+elsif Run_Mode0.In_Hand then
+  Hand := true;
+  
+end_if;]]></xhtml>
+          </ST>
+        </body>
+      </pou>
+      <pou name="main" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="Auto_Mode_En">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="START_CMD0">
+              <type>
+                <derived name="Start_CMD"/>
+              </type>
+            </variable>
+            <variable name="Hand_Mode_En">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Auto_Relay">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Run_CMD">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Hand_Relay">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="STA_Butt">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="STP_Butt">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Run_Perm">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Auto_Req">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="VFD_Fault_Latched">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="VFD_Fault">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Press_Fault_Latched">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="High_Press">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Reset_Cmd">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Reset_Butt">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Hand_Req">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Auto_Inhib">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <LD>
+            <leftPowerRail localId="5626633" width="3" height="40">
+              <position x="0" y="30"/>
+              <connectionPointOut formalParameter="none"/>
+            </leftPowerRail>
+            <block localId="6058596" typeName="Start_CMD" instanceName="START_CMD0" width="198" height="140" executionOrderId="0">
+              <position x="143" y="14"/>
+              <inputVariables>
+                <variable formalParameter="EN">
+                  <connectionPointIn>
+                    <connection refLocalId="5626633"/>
+                  </connectionPointIn>
+                </variable>
+                <variable formalParameter="HOA_In_Hand">
+                  <connectionPointIn>
+                    <connection refLocalId="3826860"/>
+                  </connectionPointIn>
+                </variable>
+                <variable formalParameter="HOA_In_Auto">
+                  <connectionPointIn>
+                    <connection refLocalId="3611388"/>
+                  </connectionPointIn>
+                </variable>
+              </inputVariables>
+              <inOutVariables/>
+              <outputVariables>
+                <variable formalParameter="ENO">
+                  <connectionPointOut/>
+                </variable>
+                <variable formalParameter="Auto">
+                  <connectionPointOut>
+                    <expression>Auto_Mode_En</expression>
+                  </connectionPointOut>
+                </variable>
+                <variable formalParameter="Hand">
+                  <connectionPointOut>
+                    <expression>Hand_Mode_En</expression>
+                  </connectionPointOut>
+                </variable>
+              </outputVariables>
+            </block>
+            <contact localId="2088736" negated="true" width="24" height="24">
+              <position x="68" y="212"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>STP_Butt</variable>
+            </contact>
+            <contact localId="5219780" negated="true" width="24" height="24">
+              <position x="182" y="212"/>
+              <connectionPointIn>
+                <connection refLocalId="2088736"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>VFD_Fault_Latched</variable>
+            </contact>
+            <contact localId="1354123" negated="true" width="24" height="24">
+              <position x="296" y="212"/>
+              <connectionPointIn>
+                <connection refLocalId="5219780"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Press_Fault_Latched</variable>
+            </contact>
+            <contact localId="4363112" negated="false" width="24" height="24">
+              <position x="68" y="332"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Run_Perm</variable>
+            </contact>
+            <contact localId="2273749" negated="false" width="24" height="24">
+              <position x="182" y="332"/>
+              <connectionPointIn>
+                <connection refLocalId="4363112"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Hand_Mode_En</variable>
+            </contact>
+            <contact localId="953525" negated="false" width="24" height="24">
+              <position x="300" y="332"/>
+              <connectionPointIn>
+                <connection refLocalId="2273749"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>STA_Butt</variable>
+            </contact>
+            <contact localId="1928420" negated="false" width="24" height="24">
+              <position x="300" y="424"/>
+              <connectionPointIn>
+                <connection refLocalId="2273749"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Hand_Req</variable>
+            </contact>
+            <contact localId="7590920" negated="false" width="24" height="24">
+              <position x="68" y="506"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Run_Perm</variable>
+            </contact>
+            <contact localId="2364730" negated="false" width="24" height="24">
+              <position x="182" y="506"/>
+              <connectionPointIn>
+                <connection refLocalId="7590920"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Auto_Mode_En</variable>
+            </contact>
+            <contact localId="855755" negated="true" width="24" height="24">
+              <position x="296" y="506"/>
+              <connectionPointIn>
+                <connection refLocalId="2364730"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Auto_Inhib</variable>
+            </contact>
+            <contact localId="8488113" negated="false" width="24" height="24">
+              <position x="72" y="626"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>VFD_Fault</variable>
+            </contact>
+            <contact localId="4868530" negated="false" width="24" height="24">
+              <position x="72" y="718"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>VFD_Fault_Latched</variable>
+            </contact>
+            <contact localId="5898412" negated="true" width="24" height="24">
+              <position x="190" y="626"/>
+              <connectionPointIn>
+                <connection refLocalId="8488113"/>
+                <connection refLocalId="4868530"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Reset_Cmd</variable>
+            </contact>
+            <contact localId="4065051" negated="false" width="24" height="24">
+              <position x="72" y="800"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>High_Press</variable>
+            </contact>
+            <contact localId="5874834" negated="false" width="24" height="24">
+              <position x="72" y="892"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Press_Fault_Latched</variable>
+            </contact>
+            <contact localId="6872680" negated="true" width="24" height="24">
+              <position x="190" y="800"/>
+              <connectionPointIn>
+                <connection refLocalId="4065051"/>
+                <connection refLocalId="5874834"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Reset_Cmd</variable>
+            </contact>
+            <contact localId="4607195" negated="false" width="24" height="24">
+              <position x="68" y="974"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Reset_Butt</variable>
+            </contact>
+            <contact localId="4669710" negated="false" width="24" height="24">
+              <position x="72" y="1094"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>VFD_Fault_Latched</variable>
+            </contact>
+            <contact localId="2370789" negated="false" width="24" height="24">
+              <position x="72" y="1186"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Press_Fault_Latched</variable>
+            </contact>
+            <contact localId="9399592" negated="false" width="24" height="24">
+              <position x="72" y="1278"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Auto_Inhib</variable>
+            </contact>
+            <contact localId="8250741" negated="false" width="24" height="24">
+              <position x="190" y="1094"/>
+              <connectionPointIn>
+                <connection refLocalId="4669710"/>
+                <connection refLocalId="2370789"/>
+                <connection refLocalId="9399592"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Auto_Mode_En</variable>
+            </contact>
+            <contact localId="5199512" negated="false" width="24" height="24">
+              <position x="72" y="1360"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Hand_Req</variable>
+            </contact>
+            <contact localId="1178127" negated="false" width="24" height="24">
+              <position x="72" y="1452"/>
+              <connectionPointIn>
+                <connection refLocalId="5626633"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Auto_Req</variable>
+            </contact>
+            <coil localId="5049612" negated="false" width="28" height="24">
+              <position x="410" y="212"/>
+              <connectionPointIn>
+                <connection refLocalId="1354123"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Run_Perm</variable>
+            </coil>
+            <coil localId="2333341" negated="false" width="28" height="24">
+              <position x="418" y="332"/>
+              <connectionPointIn>
+                <connection refLocalId="953525"/>
+                <connection refLocalId="1928420"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Hand_Req</variable>
+            </coil>
+            <coil localId="764638" negated="false" width="28" height="24">
+              <position x="410" y="506"/>
+              <connectionPointIn>
+                <connection refLocalId="855755"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Auto_Req</variable>
+            </coil>
+            <coil localId="3214919" negated="false" width="28" height="24">
+              <position x="304" y="626"/>
+              <connectionPointIn>
+                <connection refLocalId="5898412"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>VFD_Fault_Latched</variable>
+            </coil>
+            <coil localId="5699067" negated="false" width="28" height="24">
+              <position x="304" y="800"/>
+              <connectionPointIn>
+                <connection refLocalId="6872680"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Press_Fault_Latched</variable>
+            </coil>
+            <coil localId="2878613" negated="false" width="28" height="24">
+              <position x="182" y="974"/>
+              <connectionPointIn>
+                <connection refLocalId="4607195"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Reset_Cmd</variable>
+            </coil>
+            <coil localId="1347653" negated="false" width="28" height="24">
+              <position x="304" y="1094"/>
+              <connectionPointIn>
+                <connection refLocalId="8250741"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Auto_Inhib</variable>
+            </coil>
+            <coil localId="2897423" negated="false" width="28" height="24">
+              <position x="190" y="1360"/>
+              <connectionPointIn>
+                <connection refLocalId="5199512"/>
+                <connection refLocalId="1178127"/>
+              </connectionPointIn>
+              <connectionPointOut/>
+              <variable>Run_CMD</variable>
+            </coil>
+            <inVariable localId="3826860" executionOrderId="0" width="80" height="32" negated="false">
+              <position x="33" y="74"/>
+              <connectionPointOut/>
+              <expression>Hand_Relay</expression>
+            </inVariable>
+            <inVariable localId="3611388" executionOrderId="0" width="80" height="32" negated="false">
+              <position x="33" y="114"/>
+              <connectionPointOut/>
+              <expression>Auto_Relay</expression>
+            </inVariable>
+            <rightPowerRail localId="1830897" width="3" height="40">
+              <position x="601" y="30"/>
+              <connectionPointIn/>
+            </rightPowerRail>
+          </LD>
+        </body>
+      </pou>
+    </pous>
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="Config0">
+        <resource name="Res0">
+          <task name="task0" priority="1" interval="T#20ms">
+            <pouInstance name="instance0" typeName="main"/>
+          </task>
+        </resource>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

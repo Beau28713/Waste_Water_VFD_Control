@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "Waste Water VFD Control",
+    "type": "plc-project"
+  },
+  "data": {
+    "dataTypes": [
+      {
+        "name": "HOA_MODE",
+        "derivation": "enumerated",
+        "initialValue": "",
+        "values": [
+          {
+            "description": "HOA_HAND"
+          },
+          {
+            "description": "HOA_AUTO"
+          },
+          {
+            "description": "HOA_OFF"
+          }
+        ]
+      }
+    ],
+    "pous": [],
+    "configuration": {
+      "resource": {
+        "tasks": [
+          {
+            "name": "task0",
+            "triggering": "Cyclic",
+            "interval": "T#20ms",
+            "priority": 1
+          }
+        ],
+        "instances": [
+          {
+            "name": "instance0",
+            "task": "task0",
+            "program": "main"
+          }
+        ],
+        "globalVariables": []
+      }
+    },
+    "deletedPous": [],
+    "deletedServers": [],
+    "deletedRemoteDevices": []
+  }
+}
