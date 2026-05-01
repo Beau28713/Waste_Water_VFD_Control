@@ -1,6 +1,6 @@
 # PLC Pump Control Logic Project
 
-A PLC-style pump control project built in PLCopen XML using ladder logic and function blocks.
+A PLC-style pump control project built in Openplc using ladder logic, Struct Text and function blocks.
 
 This project is focused on building a solid control foundation using real automation concepts such as HOA mode selection, hand/auto operation, run permissives, latched faults, reset behavior, and run command logic.
 
